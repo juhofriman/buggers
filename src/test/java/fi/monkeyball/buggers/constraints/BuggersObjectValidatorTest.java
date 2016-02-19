@@ -4,6 +4,7 @@ import fi.monkeyball.buggers.model.BuggersObject;
 import fi.monkeyball.buggers.model.BuggersObjectBuilder;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -18,5 +19,14 @@ public class BuggersObjectValidatorTest {
         BuggersObject bo = BuggersObjectBuilder.buggers().string("field", "value").build();
 
         assertTrue(buggersConstraints.isValid(bo));
+    }
+
+    @Test
+    public void testSimpleValidationWithInvalidObject() throws Exception {
+        BuggersConstraints buggersConstraints = new BuggersConstraints();
+        buggersConstraints.add(new FieldMustExistsConstraint("young-padawan"));
+        BuggersObject bo = BuggersObjectBuilder.buggers().string("field", "value").build();
+
+        assertFalse(buggersConstraints.isValid(bo));
     }
 }

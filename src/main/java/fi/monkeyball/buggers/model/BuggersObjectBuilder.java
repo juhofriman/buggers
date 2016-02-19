@@ -10,7 +10,7 @@ public class BuggersObjectBuilder {
 
     public static class StatefulBuilder {
 
-        List<BuggersObject.StringObjectTuple> fields = new LinkedList<>();
+        private List<BuggersObject.StringObjectTuple> fields = new LinkedList<>();
 
         public StatefulBuilder string(String key, String value) {
             this.fields.add(new BuggersObject.StringObjectTuple(key, new BuggersString(value)));
@@ -23,6 +23,16 @@ public class BuggersObjectBuilder {
 
         public StatefulBuilder integer(String key, Integer value) {
             this.fields.add(new BuggersObject.StringObjectTuple(key, new BuggersInt(value)));
+            return this;
+        }
+
+        public StatefulBuilder array(String key, BuggersValue ... objects) {
+            this.fields.add(new BuggersObject.StringObjectTuple(key, new BuggersArray(objects)));
+            return this;
+        }
+
+        public StatefulBuilder buggers(String key, BuggersObject object) {
+            this.fields.add(new BuggersObject.StringObjectTuple(key, object));
             return this;
         }
     }
