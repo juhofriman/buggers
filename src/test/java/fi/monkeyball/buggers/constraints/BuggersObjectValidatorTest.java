@@ -29,4 +29,30 @@ public class BuggersObjectValidatorTest {
 
         assertFalse(buggersConstraints.isValid(bo));
     }
+
+    @Test
+    public void testWithNestedObject() throws Exception {
+        BuggersConstraints buggersConstraints = new BuggersConstraints();
+        buggersConstraints.add(new FieldMustExistsConstraint("a.field"));
+        BuggersObject bo = BuggersObjectBuilder
+                .buggers()
+                .buggers("a", BuggersObjectBuilder.buggers()
+                        .string("field", "check").build()).build();
+
+        assertTrue(buggersConstraints.isValid(bo));
+
+    }
+
+    @Test
+    public void testWithNonValidNestedObject() throws Exception {
+        BuggersConstraints buggersConstraints = new BuggersConstraints();
+        buggersConstraints.add(new FieldMustExistsConstraint("a.field.donotexist"));
+        BuggersObject bo = BuggersObjectBuilder
+                .buggers()
+                .buggers("a", BuggersObjectBuilder.buggers()
+                        .string("field", "check").build()).build();
+
+        assertFalse(buggersConstraints.isValid(bo));
+
+    }
 }
