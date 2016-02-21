@@ -13,23 +13,12 @@ public class BuggersObject implements BuggersValue<Map<String, BuggersValue>> {
 
     }
 
-    @Deprecated
-    public BuggersObject() {
-
-    }
-
     public Set<String> keySet() {
         return this.values.keySet();
     }
 
     public BuggersValue get(String key) {
         return values.get(key);
-    }
-
-    // Must be immutable
-    @Deprecated
-    public void add(String key, BuggersValue value) {
-        this.values.put(key, value);
     }
 
     @Override

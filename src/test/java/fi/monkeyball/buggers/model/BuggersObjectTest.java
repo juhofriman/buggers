@@ -16,7 +16,6 @@ public class BuggersObjectTest {
 	@Test
 	public void testBuggersObjectWithStringValue() {
         BuggersObject buggersObject = BuggersObjectBuilder.buggers().string("key", "value").build();
-        buggersObject.add("key", new BuggersString("value"));
         assertEquals(((BuggersString)buggersObject.get("key")).getValue(), "value");
     }
 
@@ -35,7 +34,6 @@ public class BuggersObjectTest {
     @Test
     public void testBuggersObjectWithInteger() {
         BuggersObject buggersObject = BuggersObjectBuilder.buggers().integer("key", 1).build();
-        buggersObject.add("key", new BuggersInt(1));
         assertEquals(buggersObject.get("key").getValue(), new Integer(1));
     }
 
