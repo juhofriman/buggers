@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class BuggersObjectTest {
 
     @Test
@@ -60,5 +62,45 @@ public class BuggersObjectTest {
         assertEquals(((BuggersObject)root.get("key")).get("child").getValue(), "hello");
         assertEquals(((BuggersObject)root.get("key")).get("child2").getValue(), "hello2");
 
+    }
+
+    @Test
+    public void testAcceptsVisitor() {
+        BuggersObject buggersObject = BuggersObjectBuilder.buggers()
+                .string("key", "value")
+                .integer("integer", 1)
+                .build();
+
+        final AtomicBoolean visitStringCalled = new AtomicBoolean(false);
+        final AtomicBoolean visitIntegerCalled = new AtomicBoolean(false);
+
+        buggersObject.accept(new BuggersValueVisitor() {
+            @Override
+            public void visit(BuggersObject buggersObject) {
+                for (String key : buggersObject.keySet()) {
+                    buggersObject.get(key).accept(this);
+                }
+            }
+
+            @Override
+            public void visit(BuggersInt buggersInt) {
+                visitIntegerCalled.set(true);
+                assertEquals(new Integer(1), buggersInt.getValue());
+            }
+
+            @Override
+            public void visit(BuggersArray buggersArray) {
+
+            }
+
+            @Override
+            public void visit(BuggersString buggersString) {
+                visitStringCalled.set(true);
+                assertEquals("value", buggersString.getValue());
+            }
+        });
+
+        assertTrue(visitStringCalled.get());
+        assertTrue(visitIntegerCalled.get());
     }
 }

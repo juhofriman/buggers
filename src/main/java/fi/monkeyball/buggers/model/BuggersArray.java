@@ -18,4 +18,9 @@ public class BuggersArray implements BuggersValue<List<BuggersValue>> {
     public List<BuggersValue> getValue() {
         return this.values;
     }
+
+    @Override
+    public void accept(BuggersValueVisitor visitor) {
+        visitor.visit(this);
+    }
 }

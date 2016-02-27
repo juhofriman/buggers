@@ -6,4 +6,6 @@ package fi.monkeyball.buggers.model;
 public interface BuggersValue<T> {
 
     T getValue();
+
+    void accept(BuggersValueVisitor visitor);
 }

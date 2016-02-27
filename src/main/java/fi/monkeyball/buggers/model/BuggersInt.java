@@ -13,4 +13,9 @@ public class BuggersInt implements BuggersValue<Integer> {
     public Integer getValue() {
         return value;
     }
+
+    @Override
+    public void accept(BuggersValueVisitor visitor) {
+        visitor.visit(this);
+    }
 }

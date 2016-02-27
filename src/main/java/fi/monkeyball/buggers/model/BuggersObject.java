@@ -26,6 +26,11 @@ public class BuggersObject implements BuggersValue<Map<String, BuggersValue>> {
         return this.values;
     }
 
+    @Override
+    public void accept(BuggersValueVisitor visitor) {
+        visitor.visit(this);
+    }
+
     public boolean containsKey(String field) {
         return this.values.containsKey(field);
     }
