@@ -19,30 +19,28 @@ public class BuggerObjectJsonSerializer implements JsonSerializer<BuggersObject>
 
     private static class BuggersToJsonMapper implements BuggersValueVisitor {
 
-        JsonObject root = new JsonObject();
-        JsonObject jsonObject = root;
-        // Horrible...
-        private String currentKey = null;
-
+        JsonElement jsonObject = null;
+       
+        
         private JsonElement getJsonObject() {
-            return this.root;
+            return this.jsonObject;
         }
 
         @Override
         public void visit(BuggersObject buggersObject) {
-            if(this.currentKey != null) {
-                this.jsonObject = new JsonObject();
-                this.root.add(this.currentKey, jsonObject);
-            }
+            JsonObject json = new JsonObject();
             for (String key : buggersObject.keySet()) {
-                this.currentKey = key;
-                buggersObject.get(this.currentKey).accept(this);
-            }
+				BuggersToJsonMapper buggersToJsonMapper = new BuggersToJsonMapper();
+				buggersObject.get(key).accept(buggersToJsonMapper);
+				json.add(key, buggersToJsonMapper.getJsonObject());
+			}
+            this.jsonObject = json;
+          
         }
 
         @Override
         public void visit(BuggersInt buggersInt) {
-            jsonObject.add(this.currentKey, new JsonPrimitive(buggersInt.getValue()));
+            this.jsonObject = new JsonPrimitive(buggersInt.getValue());
         }
 
         @Override
@@ -52,7 +50,7 @@ public class BuggerObjectJsonSerializer implements JsonSerializer<BuggersObject>
 
         @Override
         public void visit(BuggersString buggersString) {
-            jsonObject.add(this.currentKey, new JsonPrimitive(buggersString.getValue()));
+        	this.jsonObject = new JsonPrimitive(buggersString.getValue());
         }
     }
 }

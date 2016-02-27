@@ -7,12 +7,17 @@ import fi.monkeyball.buggers.model.BuggersObjectBuilder;
 public class BuggersStore {
 
     public BuggersObject get(String s) {
-        return BuggersObjectBuilder
-                .buggers()
-                .string("a", "foo")
-                .string("b", "bar")
-                .integer("c", 1)
-                .buggers("key1", BuggersObjectBuilder.buggers().string("a", "b").build())
+        return BuggersObjectBuilder.buggers()
+                .buggers("key1", 
+                		BuggersObjectBuilder
+                		.buggers()
+                		.string("a", "value")
+                		.string("b", "value2")
+                		.buggers("deep", BuggersObjectBuilder
+                				.buggers()
+                				.integer("c1", 1)
+                				.build())
+                		.build())
                 .build();
     }
 }

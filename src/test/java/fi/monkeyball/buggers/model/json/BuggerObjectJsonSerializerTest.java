@@ -47,7 +47,16 @@ public class BuggerObjectJsonSerializerTest {
     public void testSerializationWithNestedObject() throws Exception {
 
         BuggersObject bo = BuggersObjectBuilder.buggers()
-                .buggers("key1", BuggersObjectBuilder.buggers().string("a", "b").build())
+                .buggers("key1", 
+                		BuggersObjectBuilder
+                		.buggers()
+                		.string("a", "value")
+                		.string("b", "value2")
+                		.buggers("deep", BuggersObjectBuilder
+                				.buggers()
+                				.integer("c1", 1)
+                				.build())
+                		.build())
                 .build();
 
         String json = gson.toJson(bo);
@@ -55,6 +64,11 @@ public class BuggerObjectJsonSerializerTest {
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
 
         assertTrue(jsonObject.get("key1").isJsonObject());
+
+        assertEquals("value", jsonObject.get("key1").getAsJsonObject().get("a").getAsString());
+        assertEquals("value2", jsonObject.get("key1").getAsJsonObject().get("b").getAsString());
+
+        assertTrue(jsonObject.get("key1").getAsJsonObject().get("deep").isJsonObject());
 
     }
 }
